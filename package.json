@@ -19,7 +19,7 @@
   "dependencies": {
     "@inertiajs/react": "^2.1.6",   
     "jspdf": "^3.0.3",
-    "jspdf-autotable": "^5.0.2",
+    "jspdf-autotable": "^5.0.2",  
     "lucide-react": "^0.544.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
