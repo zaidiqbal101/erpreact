@@ -44,13 +44,17 @@ export default function Sidebar() {
       ]
     },
     {
-      title: "Inventory & Supply Chain",
-      items: [
-        { id: "inventory", label: "Stock & Batch", icon: Package, path: "/inventory" },
-        { id: "vendors", label: "Vendors & Orders", icon: Truck, path: "/vendors" },
-        { id: "logistics", label: "Logistics & Shipments", icon: Truck, path: "/logistics" },
-      ]
-    },
+  title: "Inventory & Supply Chain",
+  items: [
+    { id: "inventory", label: "Stock & Batch", icon: Package, path: "/inventory" },
+    { id: "add-item", label: "Add Item", icon: FileText, path: "/add-item" },
+    { id: "vendors", label: "Vendors & Orders", icon: Truck, path: "/vendors" },
+    { id: "orders", label: "Purchase Orders", icon: CreditCard, path: "/orders" },
+    { id: "shipments", label: "Shipments", icon: Send, path: "/shipments" },
+    { id: "reports", label: "Reports", icon: BarChart3, path: "/reports" },
+  ]
+}
+,
     {
       title: "Customer Relationship Management",
       items: [

@@ -16,6 +16,17 @@ import Attendance from "./pages/hrm/Attendance";
 import Payroll from "./pages/hrm/Payroll";
 import Recruitment from "./pages/hrm/Recruitment";
 
+//Secuirity
+import Security from "./pages/Security/Security";
+
+//Inventory
+import Inventory from "./pages/Inventory/Inventory";
+import AddItem from "./pages/Inventory/AddItem";
+import Vendors from "./pages/Inventory/Vendors";
+import Orders from "./pages/Inventory/Orders";
+import Shipments from "./pages/Inventory/Shipments";
+import Reports from "./pages/Inventory/Reports";
+
 // Auth
 import Login from "./pages/Auth/Login";
 import PrivateRoute from "./components/Auth/PrivateRoute";
@@ -51,6 +62,15 @@ function App() {
                     <Route path="/attendance" element={<Attendance />} />
                     <Route path="/payroll" element={<Payroll />} />
                     <Route path="/recruitment" element={<Recruitment />} />
+                    <Route path="/security" element={<Security />} />
+
+                  {/*Inventory*/}
+                  <Route path="/inventory" element={<Inventory />} />
+                  <Route path="/add-item" element={<AddItem />} />
+                  <Route path="/vendors" element={<Vendors />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/shipments" element={<Shipments />} />
+                  <Route path="/reports" element={<Reports />} />
                   </Routes>
                 </div>
               </div>

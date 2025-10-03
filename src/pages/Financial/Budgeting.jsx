@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/Layout/Sidebar";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Plus, Edit2, Trash2, Save, X, FileText } from "lucide-react";
 
 export default function Budgeting() {
   const [budgetData, setBudgetData] = useState([
@@ -15,24 +9,25 @@ export default function Budgeting() {
     { id: 2, category: "R&D", budget: 7000, spent: 4200 },
     { id: 3, category: "Operations", budget: 6000, spent: 5800 },
   ]);
-
   const [newBudget, setNewBudget] = useState({ category: "", budget: "", spent: "" });
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState("");
 
+  const totalBudget = budgetData.reduce((sum, b) => sum + Number(b.budget), 0);
+  const totalSpent = budgetData.reduce((sum, b) => sum + Number(b.spent), 0);
+
   const handleAddOrUpdate = () => {
     if (!newBudget.category || !newBudget.budget || newBudget.budget <= 0 || newBudget.spent < 0) {
-      setError("Please provide a valid category, budget (>0), and non-negative spent amount.");
+      setError("Provide valid category, budget (>0), and non-negative spent amount.");
       return;
     }
     setError("");
+    const entry = { ...newBudget, budget: Number(newBudget.budget), spent: Number(newBudget.spent) };
     if (editingId) {
-      setBudgetData(budgetData.map(b =>
-        b.id === editingId ? { ...b, ...newBudget, budget: Number(newBudget.budget), spent: Number(newBudget.spent) } : b
-      ));
+      setBudgetData(budgetData.map(b => b.id === editingId ? { ...b, ...entry } : b));
       setEditingId(null);
     } else {
-      setBudgetData([...budgetData, { id: Date.now(), ...newBudget, budget: Number(newBudget.budget), spent: Number(newBudget.spent) }]);
+      setBudgetData([...budgetData, { ...entry, id: Date.now() }]);
     }
     setNewBudget({ category: "", budget: "", spent: "" });
   };
@@ -48,118 +43,128 @@ export default function Budgeting() {
     setNewBudget({ category: "", budget: "", spent: "" });
   };
 
-  const totalBudget = budgetData.reduce((sum, b) => sum + Number(b.budget), 0);
-  const totalSpent = budgetData.reduce((sum, b) => sum + Number(b.spent), 0);
-
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar fixed width */}
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100">
+      {/* Sidebar */}
       <div className="w-72 fixed h-full">
         <Sidebar />
       </div>
 
-      {/* Main content with margin to prevent overlap */}
-      <main className="flex-1 ml-72 p-6 overflow-y-auto">
-        <h1 className="mb-6 text-2xl font-bold text-gray-900">Budgeting</h1>
+      {/* Main content */}
+      <main className="flex-1 ml-72 p-8">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white p-8 rounded-2xl shadow-xl mb-6">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">
+            Budgeting Dashboard
+          </h1>
+          <p className="text-blue-200 text-sm">Track budgets, expenditures, and financial performance</p>
+        </div>
 
-        {/* Budget Summary */}
-        <div className="bg-white border rounded-xl shadow p-6 mb-6 flex flex-wrap gap-8">
-          <p className="text-lg font-semibold text-blue-600">
-            Total Budget: ${totalBudget.toFixed(2)}
-          </p>
-          <p className="text-lg font-semibold text-orange-500">
-            Total Spent: ${totalSpent.toFixed(2)}
-          </p>
-          <p className="text-lg font-semibold text-green-600">
-            Remaining: ${(totalBudget - totalSpent).toFixed(2)}
-          </p>
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl">
+            <p className="text-sm font-medium mb-1">Total Budget</p>
+            <p className="text-3xl font-bold">${totalBudget.toFixed(2)}</p>
+          </div>
+          <div className="bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl p-6 text-white shadow-xl">
+            <p className="text-sm font-medium mb-1">Total Spent</p>
+            <p className="text-3xl font-bold">${totalSpent.toFixed(2)}</p>
+          </div>
+          <div className={`bg-gradient-to-br ${totalBudget - totalSpent >= 0 ? 'from-green-500 to-emerald-600' : 'from-red-500 to-red-600'} rounded-2xl p-6 text-white shadow-xl`}>
+            <p className="text-sm font-medium mb-1">Remaining</p>
+            <p className="text-3xl font-bold">${(totalBudget - totalSpent).toFixed(2)}</p>
+          </div>
         </div>
 
         {/* Add/Edit Form */}
-        <div className="bg-white border rounded-xl shadow p-6 mb-6">
-          <h3 className="text-xl font-semibold mb-4">
-            {editingId ? "Edit Budget" : "Add New Budget"}
-          </h3>
-          {error && <p className="mb-4 p-3 text-red-600 bg-red-100 border rounded">{error}</p>}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-200">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+              {editingId ? <Edit2 size={20} className="text-white" /> : <Plus size={20} className="text-white" />}
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800">{editingId ? "Edit Budget" : "Add New Budget"}</h3>
+          </div>
 
-          <div className="flex flex-col gap-4">
+          {error && <p className="mb-4 p-3 text-red-600 bg-red-100 rounded">{error}</p>}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <input
               type="text"
               placeholder="Category"
               value={newBudget.category}
               onChange={(e) => setNewBudget({ ...newBudget, category: e.target.value })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="number"
               placeholder="Budget ($)"
               value={newBudget.budget}
               onChange={(e) => setNewBudget({ ...newBudget, budget: e.target.value })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="number"
               placeholder="Spent ($)"
               value={newBudget.spent}
               onChange={(e) => setNewBudget({ ...newBudget, spent: e.target.value })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500"
             />
+          </div>
 
-            <div className="flex gap-3">
-              <button onClick={handleAddOrUpdate} className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-                {editingId ? "Update" : "Add"}
+          <div className="flex gap-3">
+            <button onClick={handleAddOrUpdate} className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl">
+              {editingId ? <Save size={18} /> : <Plus size={18} />}
+              {editingId ? "Update Budget" : "Add Budget"}
+            </button>
+            {editingId && (
+              <button onClick={handleCancel} className="flex items-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-xl">
+                <X size={18} /> Cancel
               </button>
-              {editingId && (
-                <button onClick={handleCancel} className="px-4 py-2 bg-gray-600 text-white rounded-lg">
-                  Cancel
-                </button>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
         {/* Budget Table */}
-        <div className="bg-white border rounded-xl shadow p-6 mb-6 overflow-x-auto">
-          <h3 className="text-xl font-semibold mb-4">Budget Overview</h3>
-          <table className="w-full border-collapse text-sm min-w-[600px]">
-            <thead>
-              <tr className="bg-blue-600 text-white">
-                <th className="px-4 py-2 border">Category</th>
-                <th className="px-4 py-2 border">Budget</th>
-                <th className="px-4 py-2 border">Spent</th>
-                <th className="px-4 py-2 border">%</th>
-                <th className="px-4 py-2 border">Status</th>
-                <th className="px-4 py-2 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {budgetData.map((b) => (
-                <tr key={b.id} className="even:bg-gray-50">
-                  <td className="px-4 py-2 border">{b.category}</td>
-                  <td className="px-4 py-2 border">{b.budget.toFixed(2)}</td>
-                  <td className="px-4 py-2 border">{b.spent.toFixed(2)}</td>
-                  <td className="px-4 py-2 border">
-                    {((b.spent / b.budget) * 100).toFixed(2)}%
-                  </td>
-                  <td className="px-4 py-2 border">
-                    {b.spent > b.budget ? (
-                      <span className="px-2 py-1 text-red-600 bg-red-100 rounded">Over</span>
-                    ) : (
-                      <span className="px-2 py-1 text-green-600 bg-green-100 rounded">OK</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 border">
-                    <button onClick={() => handleEdit(b)} className="px-2 py-1 bg-blue-600 text-white rounded mr-2">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(b.id)} className="px-2 py-1 bg-red-600 text-white rounded">
-                      Delete
-                    </button>
-                  </td>
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 p-6 mb-8">
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <FileText size={24} /> Budget Overview
+          </h3>
+
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse min-w-[600px]">
+              <thead className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                <tr>
+                  <th className="px-4 py-2 border">Category</th>
+                  <th className="px-4 py-2 border">Budget</th>
+                  <th className="px-4 py-2 border">Spent</th>
+                  <th className="px-4 py-2 border">%</th>
+                  <th className="px-4 py-2 border">Status</th>
+                  <th className="px-4 py-2 border">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {budgetData.map(b => (
+                  <tr key={b.id} className="even:bg-gray-50 hover:bg-blue-50 transition-colors">
+                    <td className="px-4 py-2 border">{b.category}</td>
+                    <td className="px-4 py-2 border">{b.budget.toFixed(2)}</td>
+                    <td className="px-4 py-2 border">{b.spent.toFixed(2)}</td>
+                    <td className="px-4 py-2 border">{((b.spent / b.budget) * 100).toFixed(2)}%</td>
+                    <td className="px-4 py-2 border">
+                      {b.spent > b.budget ? (
+                        <span className="px-2 py-1 text-red-600 bg-red-100 rounded">Over</span>
+                      ) : (
+                        <span className="px-2 py-1 text-green-600 bg-green-100 rounded">OK</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 border flex gap-2">
+                      <button onClick={() => handleEdit(b)} className="px-2 py-1 bg-yellow-500 text-white rounded">Edit</button>
+                      <button onClick={() => handleDelete(b.id)} className="px-2 py-1 bg-red-500 text-white rounded">Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {/* Chart */}
           <div className="mt-6">
