@@ -174,7 +174,7 @@ export default function Taxes() {
               <table className="min-w-full border-collapse">
                 <thead>
                   <tr className="bg-blue-600 text-white">
-                    <th className="px-4 py-2 border">Tax Type</th>
+                    <th className="px-4 py-2 border">Tax Type:</th>
                     <th className="px-4 py-2 border">Amount ($)</th>
                     <th className="px-4 py-2 border">Percentage</th>
                     <th className="px-4 py-2 border">Actions</th>
