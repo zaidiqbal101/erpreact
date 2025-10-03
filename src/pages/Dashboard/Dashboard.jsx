@@ -123,7 +123,7 @@ export default function Dashboard() {
               </div>
               <div className="text-right">
                 <p className="text-sm text-blue-200">Current Period</p>
-                <p className="text-xl font-semibold">October, 2025</p>
+                <p className="text-xl font-semibold">October 2025</p>
               </div>
             </div>
           </div>
